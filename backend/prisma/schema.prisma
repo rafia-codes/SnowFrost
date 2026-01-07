@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  STUDENT
+  PC
+  RECRUITER
+}
+
+enum PostingType {
+  INTERNSHIP
+  FULL_TIME
+}
+
+enum ApplicationStatus {
+  Not_Applied
+  APPLIED
+  SHORTLISTED
+  SELECTED
+  REJECTED
+}
+
+enum Employability {
+  ON_CAMPUS
+  OFF_CAMPUS
+  VERIFIED
+}
+
+enum JOBVERIFY {
+  PENDING
+  VERIFIED
+  REJECTED
+  CLOSED
+}
+
+enum status {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id        Int        @id
+  email     String     @unique
+  password  String
+  name      String?
+  role      Role       @default(STUDENT)
+  student   Student?
+  recruiter Recruiter?
+  pc        PC?
+  createdAt DateTime   @default(now())
+}
+
+model Student {
+  id            Int            @id
+  userId        Int            @unique
+  cgpa          Float
+  backlogs      Int
+  yr            Int
+  skills        String
+  passOutyr     Int
+  isVerified    Boolean        @default(false)
+  employability Employability?
+  user          User           @relation(fields: [userId], references: [id])
+  application   Application[]
+  nocs          NOC[]
+}
+
+model Recruiter {
+  id          Int       @id
+  userId      Int       @unique
+  user        User      @relation(fields: [userId], references: [id])
+  isVerified  status    @default(PENDING)
+  companyName String
+  posting     Posting[]
+}
+
+model PC {
+  id     Int    @id
+  userId Int    @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  department  String
+  college     String
+}
+
+model Posting {
+  id          Int       @id
+  recruiterId Int
+  recruiter   Recruiter @relation(fields: [recruiterId], references: [id])
+
+  title       String
+  desc        String
+  openings    Int
+  postingType PostingType
+
+  mincgpa   Int?
+  year      Int?
+  passOutyr Int?
+
+  isVerified   JOBVERIFY     @default(PENDING)
+  applications Application[]
+}
+
+model Application {
+  id        Int     @id
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id])
+
+  postingId Int
+  posting   Posting @relation(fields: [postingId], references: [id])
+
+  status    ApplicationStatus
+  resumeurl String?
+}
+
+model NOC {
+  id        Int     @id
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id])
+  isGranted status
+}
