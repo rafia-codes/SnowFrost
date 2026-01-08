@@ -1,6 +1,6 @@
 import { Router } from "express";
-import handler from '../util/errorHandler';
-import { login, logout, register } from "../controllers/authController";
+import handler from '../util/errorHandler.js';
+import { login, logout, register } from "../controllers/authController.js";
 
 const router = Router();
 

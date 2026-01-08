@@ -1,4 +1,4 @@
-import prisma from '../generated/prismaClient';
+import prisma from '../src/prisma.js';
 import jwt from 'jsonwebtoken';
 
 function generateToken(userId){
