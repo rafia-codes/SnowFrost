@@ -15,7 +15,7 @@ datasource db {
 
 enum Role {
   STUDENT
-  PC
+  PCOORDINATOR
   RECRUITER
 }
 
@@ -52,30 +52,38 @@ enum status {
 }
 
 model User {
-  id        Int        @id
-  email     String     @unique
-  password  String
-  name      String?
-  role      Role       @default(STUDENT)
-  student   Student?
-  recruiter Recruiter?
-  pc        PC?
-  createdAt DateTime   @default(now())
+  id           Int           @id
+  email        String        @unique
+  password     String
+  name         String?
+  role         Role          @default(STUDENT)
+  student      Student?
+  recruiter    Recruiter?
+  PCOORDINATOR PCOORDINATOR?
+  createdAt    DateTime      @default(now())
 }
 
 model Student {
-  id            Int            @id
-  userId        Int            @unique
-  cgpa          Float
-  backlogs      Int
-  yr            Int
-  skills        String
-  passOutyr     Int
+  id     Int  @id
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+
+  name       String
+  branch     String
+  department String
+  year       Int?
+  passOutyr  Int?
+
+  cgpa      Float?
+  backlogs  Int?
+  skills    String?
+  resumeUrl String?
+
   isVerified    Boolean        @default(false)
   employability Employability?
-  user          User           @relation(fields: [userId], references: [id])
-  application   Application[]
-  nocs          NOC[]
+
+  application Application[]
+  nocs        NOC[]
 }
 
 model Recruiter {
@@ -83,17 +91,17 @@ model Recruiter {
   userId      Int       @unique
   user        User      @relation(fields: [userId], references: [id])
   isVerified  status    @default(PENDING)
-  companyName String
+  companyName String    @unique
   posting     Posting[]
 }
 
-model PC {
-  id     Int    @id
-  userId Int    @unique
-  user   User   @relation(fields: [userId], references: [id])
+model PCOORDINATOR {
+  id     Int  @id
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
 
-  department  String
-  college     String
+  department String
+  college    String
 }
 
 model Posting {
@@ -124,6 +132,8 @@ model Application {
 
   status    ApplicationStatus
   resumeurl String?
+
+  @@unique([studentId, postingId])
 }
 
 model NOC {
