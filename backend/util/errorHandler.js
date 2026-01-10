@@ -1,5 +1,9 @@
 const handler = (fn) => (req, res, next) => {
-  Promise.resolve(fn(req, res, next)).catch(next);
+  try {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export default handler;

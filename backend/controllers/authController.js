@@ -1,8 +1,8 @@
 import prisma from '../src/prisma.js';
 import jwt from 'jsonwebtoken';
 
-function generateToken(userId){
-    return jwt.sign({userId},process.env.JWT_SECRET,{expiresIn:'3d'});
+function generateToken(userId,role){
+    return jwt.sign({userId,role},process.env.JWT_SECRET,{expiresIn:'3d'});
 }
 
 function setCookie(res,token){
@@ -19,7 +19,7 @@ export const register = async (req,res) => {
     const user = await prisma.user.findUnique({
         where:{email}
     });
-    if(!user)
+    if(user)
         return res.status(401).json({message:'User already exists'});
     const newUser = await prisma.user.create({
         data:{
@@ -42,7 +42,7 @@ export const register = async (req,res) => {
         const {department,college} = req.body;
         if(!department || !college)
             return res.status(401).json({message:'Insufficient data'});
-        await prisma.pcoordinator.create({
+        await prisma.pCOORDINATOR.create({
             data:{
                 userId:newUser.id,
                 department,
@@ -62,7 +62,7 @@ export const register = async (req,res) => {
             }
         });
     };
-    const token = generateToken(newUser.id);
+    const token = generateToken(newUser.id,role);
     setCookie(res,token);
     return res.status(201).json({message:'User registered successfully'});
 }
@@ -76,7 +76,7 @@ export const login = async (req,res) => {
     });
     if(!user || user.role!==role || user.password!==password)
         return res.status(401).json({message:'Invalid Credentials'});
-    const token = generateToken(user.id);
+    const token = generateToken(user.id,role);
     setCookie(res,token);
     return res.status(201).json({message:'Login successful'});
 };

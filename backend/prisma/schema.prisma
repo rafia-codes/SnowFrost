@@ -25,7 +25,6 @@ enum PostingType {
 }
 
 enum ApplicationStatus {
-  Not_Applied
   APPLIED
   SHORTLISTED
   SELECTED
@@ -40,6 +39,7 @@ enum Employability {
 
 enum JOBVERIFY {
   PENDING
+  SUBMITTED
   VERIFIED
   REJECTED
   CLOSED
@@ -52,11 +52,11 @@ enum status {
 }
 
 model User {
-  id           Int           @id
+  id           Int           @id   @default(autoincrement())
   email        String        @unique
   password     String
-  name         String?
   role         Role          @default(STUDENT)
+  name         String?
   student      Student?
   recruiter    Recruiter?
   PCOORDINATOR PCOORDINATOR?
@@ -64,13 +64,14 @@ model User {
 }
 
 model Student {
-  id     Int  @id
+  id     Int  @id   @default(autoincrement())
   userId Int  @unique
   user   User @relation(fields: [userId], references: [id])
 
   name       String
   branch     String
   department String
+
   year       Int?
   passOutyr  Int?
 
@@ -87,7 +88,7 @@ model Student {
 }
 
 model Recruiter {
-  id          Int       @id
+  id          Int       @id    @default(autoincrement())
   userId      Int       @unique
   user        User      @relation(fields: [userId], references: [id])
   isVerified  status    @default(PENDING)
@@ -96,7 +97,7 @@ model Recruiter {
 }
 
 model PCOORDINATOR {
-  id     Int  @id
+  id     Int  @id     @default(autoincrement())
   userId Int  @unique
   user   User @relation(fields: [userId], references: [id])
 
@@ -105,8 +106,8 @@ model PCOORDINATOR {
 }
 
 model Posting {
-  id          Int       @id
-  recruiterId Int
+  id          Int       @id      @default(autoincrement())
+  recruiterId Int       
   recruiter   Recruiter @relation(fields: [recruiterId], references: [id])
 
   title       String
@@ -123,22 +124,22 @@ model Posting {
 }
 
 model Application {
-  id        Int     @id
+  id        Int     @id   @default(autoincrement())
   studentId Int
   student   Student @relation(fields: [studentId], references: [id])
 
   postingId Int
   posting   Posting @relation(fields: [postingId], references: [id])
 
-  status    ApplicationStatus
+  status    ApplicationStatus    @default(APPLIED)
   resumeurl String?
 
   @@unique([studentId, postingId])
 }
 
 model NOC {
-  id        Int     @id
+  id        Int     @id   @default(autoincrement())
   studentId Int
   student   Student @relation(fields: [studentId], references: [id])
-  isGranted status
+  isGranted status  @default(PENDING)
 }
