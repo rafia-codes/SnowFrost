@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import handler from '../util/errorHandler.js';
 import verify from '../middlewares/middleware.js';
-import { create, update,sendToPC, closePosting, verifyPosting, rejectPosting, apply, show } from '../controllers/postingController.js';
+import { create, update,sendToPC, closePosting, verifyPosting, rejectPosting, apply, show, viewApplicants,shortlistApp, selectApp } from '../controllers/postingController.js';
 
 const postingRouter = Router();
 
@@ -14,6 +14,9 @@ postingRouter.post('/:id/verify',verify,handler(verifyPosting));
 postingRouter.post('/:id/reject',verify,handler(rejectPosting));
 
 postingRouter.post('/:id/apply',verify,handler(apply));
-postingRouter.get('/',verify,handler(show));//from fe expect ?status=VERIFIED to process query to show up only verified postings to student
+postingRouter.get('/:id/applicants',verify,handler(viewApplicants));
+postingRouter.post('/:id/:applicationId/shortlist',verify,handler(shortlistApp));
+postingRouter.post('/:id/:applicationId/select',verify,handler(selectApp));
+postingRouter.get('/',verify,handler(show));
 
 export default postingRouter;

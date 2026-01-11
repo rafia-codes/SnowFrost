@@ -45,10 +45,15 @@ enum JOBVERIFY {
   CLOSED
 }
 
-enum status {
+enum currStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum NocType {
+  ON_CAMPUS
+  OFF_CAMPUS
 }
 
 model User {
@@ -91,7 +96,7 @@ model Recruiter {
   id          Int       @id    @default(autoincrement())
   userId      Int       @unique
   user        User      @relation(fields: [userId], references: [id])
-  isVerified  status    @default(PENDING)
+  isVerified  currStatus    @default(PENDING)
   companyName String    @unique
   posting     Posting[]
 }
@@ -141,5 +146,14 @@ model NOC {
   id        Int     @id   @default(autoincrement())
   studentId Int
   student   Student @relation(fields: [studentId], references: [id])
-  isGranted status  @default(PENDING)
+
+  type      NocType 
+  isGranted currStatus  @default(PENDING)
+
+  companyName String
+  role        String
+  ctc         String
+
+  offerLetterUrl  String?
 }
+
