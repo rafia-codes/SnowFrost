@@ -15,8 +15,8 @@ postingRouter.post('/:id/reject',verify,handler(rejectPosting));
 
 postingRouter.post('/:id/apply',verify,handler(apply));
 postingRouter.get('/:id/applicants',verify,handler(viewApplicants));
-postingRouter.post('/:id/:applicationId/shortlist',verify,handler(shortlistApp));
-postingRouter.post('/:id/:applicationId/select',verify,handler(selectApp));
+postingRouter.post('/:id/applicants/:applicationId/shortlist',verify,handler(shortlistApp));
+postingRouter.post('/:id/applicants/:applicationId/select',verify,handler(selectApp));
 postingRouter.get('/',verify,handler(show));
 
 export default postingRouter;
