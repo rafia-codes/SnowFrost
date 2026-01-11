@@ -66,6 +66,10 @@ The system covers the entire lifecycle — from verified job postings and studen
 - **Authentication**: JWT-based
 - **Authorization**: Role-based (Student / Recruiter / Placement Cell)
 
+
+---
+
+
 ### **Implemented API Endpoints (MVP)**
 
 ### **Authentication**
@@ -82,10 +86,8 @@ The system covers the entire lifecycle — from verified job postings and studen
 - PUT /api/postings/:id — Edit posting (Recruiter)
 - POST /api/postings/:id/submit — Submit for PC verification
 - POST /api/postings/:id/close — Close posting (when hired)
-
 - POST /api/postings/:id/verify — Verify posting (PC)
 - POST /api/postings/:id/reject — Reject posting (PC)
-
 - GET /api/postings — View postings
 
 
