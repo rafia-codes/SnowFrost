@@ -127,7 +127,7 @@ The system covers the entire lifecycle — from verified job postings and studen
    npm install
    ```
 
-2. Run Server:
+2. Run prisma:
    ```bash
    npx prisma migrate dev
    npx prisma generate
